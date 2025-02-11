@@ -17,6 +17,7 @@ const eslintConfig = [
       'simple-import-sort': simpleImportSort,
     },
     rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
       'simple-import-sort/imports': [
         'error',
         {
