@@ -1,9 +1,12 @@
 import React from 'react';
 
+// import { unstable_noStore as noStoreCache } from 'next/cache';
 import CabinCard from '../_components/CabinCard';
 import { getCabins } from '../_lib/data-service';
 
 async function CabinList() {
+  // noStoreCache();
+
   const cabins = await getCabins();
 
   if (!cabins.length) return null;
