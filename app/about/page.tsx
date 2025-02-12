@@ -44,6 +44,7 @@ export default async function Page() {
         <Image
           src="/about-1.jpg"
           fill
+          sizes="(min-width: 640px) 50vw, 100vw"
           className="object-fit"
           alt="Family sitting around a fire pit in front of cabin"
           placeholder="blur"
@@ -56,6 +57,7 @@ export default async function Page() {
         <Image
           src="/about-2.jpg"
           fill
+          sizes="(min-width: 640px) 50vw, 100vw"
           className="object-fit"
           alt="Family that manages The Wild Oasis"
           placeholder="blur"

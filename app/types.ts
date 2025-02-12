@@ -7,3 +7,10 @@ export interface Cabin {
   image: string;
   description: string;
 }
+
+export enum CabinSearchParamsEnum {
+  ALL = 'all',
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
+}

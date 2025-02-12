@@ -1,15 +1,31 @@
 import { Suspense } from 'react';
 
 import CabinList from '../_components/CabinList';
+import Filter from '../_components/Filter';
 import Spinner from '../_components/Spinner';
+import { CabinSearchParamsEnum } from '../types';
 
-export const revalidate = 3600;
+// !For static page to clear cache
+// export const revalidate = 3600;
 
 export const metadata = {
   title: 'Cabins',
 };
 
-export default function Page() {
+interface SearchParams {
+  capacity?: CabinSearchParamsEnum | string;
+}
+
+const isValidParams = (value: CabinSearchParamsEnum | string) =>
+  Object.values(CabinSearchParamsEnum).includes(value as CabinSearchParamsEnum);
+
+export default async function Page(props: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const searchParams = await props.searchParams;
+  const filter = isValidParams(searchParams?.capacity || '')
+    ? searchParams.capacity
+    : 'all';
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -24,8 +40,12 @@ export default function Page() {
         Welcome to paradise.
       </p>
 
-      <Suspense fallback={<Spinner />}>
-        <CabinList />
+      <div className="flex justify-end mb-8">
+        <Filter />
+      </div>
+      {/* // !Add key to show loading indicator */}
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );
