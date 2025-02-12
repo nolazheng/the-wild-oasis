@@ -1,35 +1,31 @@
-import CabinCard from '../_components/CabinCard';
+import { Suspense } from 'react';
+
+import CabinList from '../_components/CabinList';
+import Filter from '../_components/Filter';
+import Spinner from '../_components/Spinner';
+import { CabinSearchParamsEnum } from '../types';
+
+// !For static page to clear cache
+// export const revalidate = 3600;
 
 export const metadata = {
   title: 'Cabins',
 };
 
-interface Cabin {
-  id: string;
-  name: string;
-  maxCapacity: number;
-  regularPrice: number;
-  discount: number;
-  image: string;
-  description: string;
+interface SearchParams {
+  capacity?: CabinSearchParamsEnum | string;
 }
 
-export default function Page() {
-  // CHANGE
-  const cabins: Cabin[] = [
-    {
-      id: '89',
-      name: '001',
-      maxCapacity: 2,
-      regularPrice: 250,
-      discount: 0,
-      description:
-        'Discover the ultimate luxury getaway for couples in the cozy wooden cabin 001. Nestled in a picturesque forest, this stunning cabin offers a secluded and intimate retreat. Inside, enjoy modern high-quality wood interiors, a comfortable seating area, a fireplace and a fully-equipped kitchen. The plush king-size bed, dressed in fine linens guarantees a peaceful nights sleep. Relax in the spa-like shower and unwind on the private deck with hot tub.',
-      image:
-        'https://dclaevazetcjjkrzczpc.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg',
-    },
-  ];
+const isValidParams = (value: CabinSearchParamsEnum | string) =>
+  Object.values(CabinSearchParamsEnum).includes(value as CabinSearchParamsEnum);
 
+export default async function Page(props: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const searchParams = await props.searchParams;
+  const filter = isValidParams(searchParams?.capacity || '')
+    ? searchParams.capacity
+    : 'all';
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -44,13 +40,13 @@ export default function Page() {
         Welcome to paradise.
       </p>
 
-      {cabins.length > 0 && (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 xl:gap-14">
-          {cabins.map((cabin) => (
-            <CabinCard cabin={cabin} key={cabin.id} />
-          ))}
-        </div>
-      )}
+      <div className="flex justify-end mb-8">
+        <Filter />
+      </div>
+      {/* // !Add key to show loading indicator */}
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
+      </Suspense>
     </div>
   );
 }
