@@ -1,15 +1,8 @@
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
+import Link from 'next/link';
 
-interface Cabin {
-  id: string;
-  name: string;
-  maxCapacity: number;
-  regularPrice: number;
-  discount: number;
-  image: string;
-  description: string;
-}
+import { Cabin } from '../types';
 
 function CabinCard({ cabin }: { cabin: Cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
@@ -20,6 +13,8 @@ function CabinCard({ cabin }: { cabin: Cabin }) {
         <Image
           src={image}
           fill
+          priority
+          sizes="(min-width: 640px) 50vw, 100vw"
           alt={`Cabin ${name}`}
           className="object-cover border-r border-primary-800"
         />
@@ -56,12 +51,12 @@ function CabinCard({ cabin }: { cabin: Cabin }) {
         </div>
 
         <div className="bg-primary-950 border-t border-t-primary-800 text-right">
-          <a
+          <Link
             href={`/cabins/${id}`}
             className="border-l border-primary-800 py-4 px-6 inline-block hover:bg-accent-600 transition-all hover:text-primary-900"
           >
             Details & reservation &rarr;
-          </a>
+          </Link>
         </div>
       </div>
     </div>
