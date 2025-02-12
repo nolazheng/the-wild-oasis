@@ -1,6 +1,6 @@
 'use client';
 
-import { useFilter } from '../hooks/useFilter';
+import { useFilter } from '../_hooks/useFilter';
 import { CabinSearchParamsEnum } from '../types';
 
 function Filter() {
