@@ -1,5 +1,6 @@
 import camelcaseKeys from 'camelcase-keys';
 import { eachDayOfInterval } from 'date-fns';
+import { notFound } from 'next/navigation';
 
 import { Cabin } from '../types';
 
@@ -19,7 +20,7 @@ export async function getCabin(id: string): Promise<Cabin> {
   // await new Promise((res) => setTimeout(res, 1000));
 
   if (error) {
-    console.error(error);
+    notFound();
   }
 
   return camelcaseKeys(data, { deep: true });
