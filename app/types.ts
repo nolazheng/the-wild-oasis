@@ -22,10 +22,13 @@ export interface Settings {
   breakfastPrice: number;
 }
 
-export interface Guest {
+export interface CreateGuestType {
   fullName: string;
   email: string;
-  // country: string;
-  // countryFlag: string;
-  // nationalID: string;
+}
+
+export interface GuestData extends CreateGuestType {
+  country: string;
+  countryFlag: string;
+  nationalID: string;
 }

@@ -3,7 +3,7 @@ import { eachDayOfInterval } from 'date-fns';
 import decamelizeKeys from 'decamelize-keys';
 import { notFound } from 'next/navigation';
 
-import { Cabin, Guest, Settings } from '../types';
+import { Cabin, CreateGuestType, GuestData, Settings } from '../types';
 
 import { supabase } from './supabase';
 
@@ -58,7 +58,7 @@ export const getCabins = async function (): Promise<Cabin[]> {
 };
 
 // Guests are uniquely identified by their email address
-export async function getGuest(email: string) {
+export async function getGuest(email: string): Promise<GuestData> {
   const { data } = await supabase
     .from('guests')
     .select('*')
@@ -66,7 +66,7 @@ export async function getGuest(email: string) {
     .single();
 
   // No error here! We handle the possibility of no guest in the sign in callback
-  return data;
+  return camelcaseKeys(data, { deep: true });
 }
 
 export async function getBooking(id: string) {
@@ -160,7 +160,7 @@ export async function getCountries(): Promise<
 /////////////
 // CREATE
 
-export async function createGuest(newGuest: Guest) {
+export async function createGuest(newGuest: CreateGuestType) {
   const { data, error } = await supabase
     .from('guests')
     .insert([decamelizeKeys(newGuest)]);

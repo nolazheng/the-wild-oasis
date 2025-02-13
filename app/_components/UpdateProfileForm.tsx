@@ -1,9 +1,14 @@
 'use client';
+
+import { GuestData } from '../types';
+
 // import Image from 'next/image';
 
 export default function UpdateProfileForm({
+  guest,
   children,
 }: {
+  guest: GuestData;
   children: React.ReactNode;
 }) {
   // CHANGE
@@ -14,6 +19,7 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <label>Full name</label>
         <input
+          defaultValue={guest.fullName}
           disabled
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
@@ -22,6 +28,7 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <label>Email address</label>
         <input
+          defaultValue={guest.email}
           disabled
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
@@ -44,6 +51,7 @@ export default function UpdateProfileForm({
         <label htmlFor="nationalID">National ID number</label>
         <input
           name="nationalID"
+          defaultValue={guest.nationalID}
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
         />
       </div>
