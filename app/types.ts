@@ -21,3 +21,11 @@ export interface Settings {
   maxGuestsPerBooking: number;
   breakfastPrice: number;
 }
+
+export interface Guest {
+  fullName: string;
+  email: string;
+  // country: string;
+  // countryFlag: string;
+  // nationalID: string;
+}

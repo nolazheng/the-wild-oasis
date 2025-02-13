@@ -1,9 +1,12 @@
 'use client';
 
+import Image from 'next/image';
+import { User } from 'next-auth/providers/notion';
+
 import { useReservation } from '@/app/_context/ReservationContext';
 import { Cabin } from '../types';
 
-function ReservationForm({ cabin }: { cabin: Cabin }) {
+function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
   const { range } = useReservation();
   const { maxCapacity } = cabin;
 
@@ -12,16 +15,17 @@ function ReservationForm({ cabin }: { cabin: Cabin }) {
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
         <p>Logged in as</p>
 
-        {/* <div className='flex gap-4 items-center'>
-          <img
-            // Important to display google profile images
-            referrerPolicy='no-referrer'
-            className='h-8 rounded-full'
+        <div className="flex gap-4 items-center">
+          <Image
+            referrerPolicy="no-referrer"
+            width={60}
+            height={60}
+            className="h-8 w-8 rounded-full"
             src={user.image}
             alt={user.name}
           />
           <p>{user.name}</p>
-        </div> */}
+        </div>
       </div>
 
       <p>

@@ -1,8 +1,9 @@
 import camelcaseKeys from 'camelcase-keys';
 import { eachDayOfInterval } from 'date-fns';
+import decamelizeKeys from 'decamelize-keys';
 import { notFound } from 'next/navigation';
 
-import { Cabin, Settings } from '../types';
+import { Cabin, Guest, Settings } from '../types';
 
 import { supabase } from './supabase';
 
@@ -159,16 +160,18 @@ export async function getCountries(): Promise<
 /////////////
 // CREATE
 
-// export async function createGuest(newGuest) {
-//   const { data, error } = await supabase.from('guests').insert([newGuest]);
+export async function createGuest(newGuest: Guest) {
+  const { data, error } = await supabase
+    .from('guests')
+    .insert([decamelizeKeys(newGuest)]);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Guest could not be created');
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error('Guest could not be created');
+  }
 
-//   return data;
-// }
+  return data;
+}
 
 // export async function createBooking(newBooking) {
 //   const { data, error } = await supabase
