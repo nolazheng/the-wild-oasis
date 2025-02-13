@@ -14,3 +14,10 @@ export enum CabinSearchParamsEnum {
   MEDIUM = 'medium',
   LARGE = 'large',
 }
+
+export interface Settings {
+  minBookingLength: number;
+  maxBookingLength: number;
+  maxGuestsPerBooking: number;
+  breakfastPrice: number;
+}
