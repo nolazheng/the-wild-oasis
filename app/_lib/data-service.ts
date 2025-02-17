@@ -3,7 +3,7 @@ import { eachDayOfInterval } from 'date-fns';
 import decamelizeKeys from 'decamelize-keys';
 import { notFound } from 'next/navigation';
 
-import { Cabin, CreateGuestType, GuestData, Settings } from '../types';
+import { Booking, Cabin, CreateGuestType, GuestData, Settings } from '../types';
 
 import { supabase } from './supabase';
 
@@ -69,7 +69,7 @@ export async function getGuest(email: string): Promise<GuestData> {
   return camelcaseKeys(data, { deep: true });
 }
 
-export async function getBooking(id: string) {
+export async function getBooking(id: string): Promise<Booking> {
   const { data, error } = await supabase
     .from('bookings')
     .select('*')
@@ -84,7 +84,7 @@ export async function getBooking(id: string) {
   return camelcaseKeys(data, { deep: true });
 }
 
-export async function getBookings(guestId: string) {
+export async function getBookings(guestId: string): Promise<Booking[]> {
   const { data, error } = await supabase
     .from('bookings')
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
@@ -99,7 +99,9 @@ export async function getBookings(guestId: string) {
     throw new Error('Bookings could not get loaded');
   }
 
-  return camelcaseKeys(data, { deep: true });
+  const bookings = camelcaseKeys(data, { deep: true }) as unknown as Booking[];
+
+  return bookings;
 }
 
 export async function getBookedDatesByCabinId(cabinId: string) {
