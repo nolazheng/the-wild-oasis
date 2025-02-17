@@ -1,8 +1,9 @@
 import camelcaseKeys from 'camelcase-keys';
 import { eachDayOfInterval } from 'date-fns';
+import decamelizeKeys from 'decamelize-keys';
 import { notFound } from 'next/navigation';
 
-import { Cabin } from '../types';
+import { Booking, Cabin, CreateGuestType, GuestData, Settings } from '../types';
 
 import { supabase } from './supabase';
 
@@ -37,7 +38,7 @@ export async function getCabinPrice(id: string) {
     console.error(error);
   }
 
-  return data;
+  return data ? camelcaseKeys(data, { deep: true }) : null;
 }
 
 export const getCabins = async function (): Promise<Cabin[]> {
@@ -57,7 +58,7 @@ export const getCabins = async function (): Promise<Cabin[]> {
 };
 
 // Guests are uniquely identified by their email address
-export async function getGuest(email: string) {
+export async function getGuest(email: string): Promise<GuestData> {
   const { data } = await supabase
     .from('guests')
     .select('*')
@@ -65,10 +66,10 @@ export async function getGuest(email: string) {
     .single();
 
   // No error here! We handle the possibility of no guest in the sign in callback
-  return data;
+  return camelcaseKeys(data, { deep: true });
 }
 
-export async function getBooking(id: string) {
+export async function getBooking(id: string): Promise<Booking> {
   const { data, error } = await supabase
     .from('bookings')
     .select('*')
@@ -80,10 +81,10 @@ export async function getBooking(id: string) {
     throw new Error('Booking could not get loaded');
   }
 
-  return data;
+  return camelcaseKeys(data, { deep: true });
 }
 
-export async function getBookings(guestId: string) {
+export async function getBookings(guestId: string): Promise<Booking[]> {
   const { data, error } = await supabase
     .from('bookings')
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
@@ -98,14 +99,15 @@ export async function getBookings(guestId: string) {
     throw new Error('Bookings could not get loaded');
   }
 
-  return data;
+  const bookings = camelcaseKeys(data, { deep: true }) as unknown as Booking[];
+
+  return bookings;
 }
 
 export async function getBookedDatesByCabinId(cabinId: string) {
   const today = new Date();
-  let todayStr = '';
   today.setUTCHours(0, 0, 0, 0);
-  todayStr = today.toISOString();
+  const todayStr = today.toISOString();
 
   // Getting all bookings
   const { data, error } = await supabase
@@ -120,7 +122,7 @@ export async function getBookedDatesByCabinId(cabinId: string) {
   }
 
   // Converting to actual dates to be displayed in the date picker
-  const bookedDates = data
+  const bookedDates = camelcaseKeys(data, { deep: true })
     .map((booking) => {
       return eachDayOfInterval({
         start: new Date(booking.startDate),
@@ -132,7 +134,7 @@ export async function getBookedDatesByCabinId(cabinId: string) {
   return bookedDates;
 }
 
-export async function getSettings() {
+export async function getSettings(): Promise<Settings> {
   const { data, error } = await supabase.from('settings').select('*').single();
 
   if (error) {
@@ -140,10 +142,12 @@ export async function getSettings() {
     throw new Error('Settings could not be loaded');
   }
 
-  return data;
+  return camelcaseKeys(data, { deep: true });
 }
 
-export async function getCountries() {
+export async function getCountries(): Promise<
+  { name: string; flag: string }[]
+> {
   try {
     const res = await fetch(
       'https://restcountries.com/v2/all?fields=name,flag'
@@ -158,16 +162,18 @@ export async function getCountries() {
 /////////////
 // CREATE
 
-// export async function createGuest(newGuest) {
-//   const { data, error } = await supabase.from('guests').insert([newGuest]);
+export async function createGuest(newGuest: CreateGuestType) {
+  const { data, error } = await supabase
+    .from('guests')
+    .insert([decamelizeKeys(newGuest)]);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Guest could not be created');
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error('Guest could not be created');
+  }
 
-//   return data;
-// }
+  return data;
+}
 
 // export async function createBooking(newBooking) {
 //   const { data, error } = await supabase

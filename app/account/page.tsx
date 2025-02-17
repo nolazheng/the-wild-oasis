@@ -1,16 +1,14 @@
-import SignInButton from '../_components/SignInButton';
+import { auth } from '../_lib/auth';
 
 export const metadata = {
   title: 'Account',
 };
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
   return (
-    <div className="flex flex-col gap-10 mt-10 items-center">
-      <h2 className="text-3xl font-semibold">
-        Sign in to access your guest area
-      </h2>
-      <SignInButton />
-    </div>
+    <h2 className="font-semibold text-2xl text-accent-400 mb-7">
+      Welcome, {session?.user.name}
+    </h2>
   );
 }
