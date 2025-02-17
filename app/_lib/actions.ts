@@ -110,7 +110,6 @@ export async function createBooking(
   bookingData: Partial<Booking>,
   formData: any
 ) {
-  console.log('🚀 ~ bookingData:', bookingData);
   const session = await auth();
   if (!session) throw new Error('You must be logged in');
 
