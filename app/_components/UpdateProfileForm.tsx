@@ -1,8 +1,23 @@
 'use client';
 
+import Image from 'next/image';
+import { useFormStatus } from 'react-dom';
+
+import { updateProfile } from '../_lib/actions';
 import { GuestData } from '../types';
 
-// import Image from 'next/image';
+function Button() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      disabled={pending}
+      className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
+    >
+      {pending ? 'Updating...' : 'Update profile'}
+    </button>
+  );
+}
 
 export default function UpdateProfileForm({
   guest,
@@ -11,15 +26,18 @@ export default function UpdateProfileForm({
   guest: GuestData;
   children: React.ReactNode;
 }) {
-  // CHANGE
-  // const countryFlag = '/pt.jpg';
+  const { fullName, email, countryFlag, nationalId } = guest;
 
   return (
-    <form className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col">
+    <form
+      action={updateProfile}
+      className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col"
+    >
       <div className="space-y-2">
         <label>Full name</label>
         <input
-          defaultValue={guest.fullName}
+          name="fullName"
+          defaultValue={fullName}
           disabled
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
@@ -28,7 +46,8 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <label>Email address</label>
         <input
-          defaultValue={guest.email}
+          name="email"
+          defaultValue={email}
           disabled
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
@@ -37,12 +56,15 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label htmlFor="nationality">Where are you from?</label>
-          {/* <Image
+          {countryFlag && (
+            <Image
               src={countryFlag}
               alt="Country flag"
-              fill
+              width={30}
+              height={40}
               className="h-5 rounded-sm"
-            /> */}
+            />
+          )}
         </div>
         {children}
       </div>
@@ -50,16 +72,15 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <label htmlFor="nationalID">National ID number</label>
         <input
-          name="nationalID"
-          defaultValue={guest.nationalID}
+          name="nationalId"
+          defaultValue={nationalId}
+          maxLength={12}
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
         />
       </div>
 
       <div className="flex justify-end items-center gap-6">
-        <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
-          Update profile
-        </button>
+        <Button />
       </div>
     </form>
   );

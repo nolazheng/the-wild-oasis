@@ -28,7 +28,7 @@ export interface CreateGuestType {
 }
 
 export interface GuestData extends CreateGuestType {
-  country: string;
   countryFlag: string;
-  nationalID: string;
+  nationalId: string;
+  nationality: string;
 }
