@@ -2,16 +2,14 @@ import { getBookedDatesByCabinId, getCabin } from '@/app/_lib/data-service';
 import { Cabin } from '@/app/types';
 
 interface RequestParams {
-  params: {
-    cabinId: string;
-  };
+  cabinId: string;
 }
 
 export async function GET(
   _request: Request,
-  { params }: RequestParams
+  { params }: { params: Promise<RequestParams> }
 ): Promise<Response> {
-  const { cabinId } = params;
+  const { cabinId } = await params;
 
   try {
     const [cabin, bookedDates]: [Cabin, Date[]] = await Promise.all([
