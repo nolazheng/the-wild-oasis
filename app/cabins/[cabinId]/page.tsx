@@ -5,6 +5,8 @@ import Reservation from '@/app/_components/Reservation';
 import Spinner from '@/app/_components/Spinner';
 import { getCabin, getCabins } from '@/app/_lib/data-service';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(props: {
   params: Promise<{ cabinId: string }>;
 }) {
